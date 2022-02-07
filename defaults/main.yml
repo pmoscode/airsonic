@@ -1,0 +1,4 @@
+---
+version: 11.0.0-SNAPSHOT.20220124042650
+install_folder: /opt/airsonic
+context_path: /

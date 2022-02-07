@@ -1,0 +1,31 @@
+---
+- name: Verify
+  hosts: all
+  gather_facts: false
+  tasks:
+  - name: Install testing dependencies
+    package:
+      name: "{{ item }}"
+      state: present
+    loop:
+      - procps
+      - net-tools
+
+  - name: Get all listen on ports
+    listen_ports_facts:
+
+  - name: Get current port status
+    set_fact:
+      port_listen: "{{ ansible_facts.tcp_listen | map(attribute='port') | unique | length }}"
+
+#  - name: Start server
+#    shell: cd /opt/yacy && ./startYACY.sh &
+#    when: port_listen == "0"
+
+  - name: Check that webserver is running and returns status 200
+    uri:
+      url: http://localhost:80
+    register: out
+    until: out.status == 200
+    retries: 5
+    delay: 5

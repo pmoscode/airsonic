@@ -1,0 +1,31 @@
+---
+- name: Install openjdk 17
+  apt:
+    name:
+      - openjdk-17-jre
+    update_cache: yes
+
+- name: "Create airsonic folder {{ install_folder }}"
+  file:
+    path: "{{ install_folder }}"
+    state: directory
+
+- name: Get Airsonic war file
+  get_url:
+    url: "https://github.com/airsonic-advanced/airsonic-advanced/releases/download/{{ version }}/airsonic.war"
+    dest: "{{ install_folder }}/airsonic.war"
+
+- name: Copy Airsonic service file
+  template:
+    src: airsonic.service.j2
+    dest: /etc/systemd/system/airsonic.service
+    mode: +x
+    owner: root
+    group: root
+
+- name: start Airsonic service
+  systemd:
+    state: restarted
+    name: airsonic
+    daemon_reload: yes
+    enabled: yes
