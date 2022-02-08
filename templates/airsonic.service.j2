@@ -1,15 +1,15 @@
 [Unit]
 Description=Airsonic Advanced Media Server
 After=remote-fs.target network.target
-AssertPathExists={{ install_folder }}
+AssertPathExists={{ airsonic_install_folder }}
 
 [Service]
 Type=simple
-Environment="JAVA_JAR={{ install_folder }}/airsonic.war"
+Environment="JAVA_JAR={{ airsonic_install_folder }}/airsonic.war"
 Environment="JAVA_OPTS=-Xmx700m"
-Environment="AIRSONIC_HOME={{ install_folder }}"
-Environment="PORT=8080"
-Environment="CONTEXT_PATH={{ context_path }}"
+Environment="AIRSONIC_HOME={{ airsonic_install_folder }}"
+Environment="PORT={{ airsonic_port }}"
+Environment="CONTEXT_PATH={{ airsonic_context_path }}"
 Environment="JAVA_ARGS="
 EnvironmentFile=-/etc/sysconfig/airsonic
 ExecStart=/usr/bin/java \

@@ -5,15 +5,31 @@
       - openjdk-17-jre
     update_cache: yes
 
-- name: "Create airsonic folder {{ install_folder }}"
+- name: "Ensure '{{ airsonic_user_group }}' group exists"
+  group:
+    name: "{{ airsonic_user_group }}"
+    state: present
+
+- name: "Ensure '{{ airsonic_user }}' user exists"
+  user:
+    name: "{{ airsonic_user }}"
+    shell: "/usr/sbin/nologin"
+    group: "{{ airsonic_user_group }}"
+    state: present
+
+- name: "Create airsonic folder {{ airsonic_install_folder }}"
   file:
-    path: "{{ install_folder }}"
+    path: "{{ airsonic_install_folder }}"
     state: directory
+    owner: "{{ airsonic_user }}"
+    group: "{{ airsonic_user_group }}"
 
 - name: Get Airsonic war file
   get_url:
-    url: "https://github.com/airsonic-advanced/airsonic-advanced/releases/download/{{ version }}/airsonic.war"
-    dest: "{{ install_folder }}/airsonic.war"
+    url: "https://github.com/airsonic-advanced/airsonic-advanced/releases/download/{{ airsonic_version }}/airsonic.war"
+    dest: "{{ airsonic_install_folder }}/airsonic.war"
+    owner: "{{ airsonic_user }}"
+    group: "{{ airsonic_user_group }}"
 
 - name: Copy Airsonic service file
   template:

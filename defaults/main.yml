@@ -1,4 +1,7 @@
 ---
-version: 11.0.0-SNAPSHOT.20220124042650
-install_folder: /opt/airsonic
-context_path: /
+airsonic_version: 11.0.0-SNAPSHOT.20220124042650
+airsonic_install_folder: /opt/airsonic
+airsonic_context_path: /
+airsonic_port: 8080
+airsonic_user: airsonic
+airsonic_user_group: airsonic

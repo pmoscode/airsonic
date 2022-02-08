@@ -18,13 +18,13 @@
     set_fact:
       port_listen: "{{ ansible_facts.tcp_listen | map(attribute='port') | unique | length }}"
 
-#  - name: Start server
-#    shell: cd /opt/yacy && ./startYACY.sh &
-#    when: port_listen == "0"
+  - name: Start server
+    shell: /usr/bin/java -jar /opt/airsonic/airsonic.war
+    when: port_listen == "0"
 
   - name: Check that webserver is running and returns status 200
     uri:
-      url: http://localhost:80
+      url: http://localhost:8080
     register: out
     until: out.status == 200
     retries: 5
