@@ -26,6 +26,6 @@
     uri:
       url: http://localhost:8080
     register: out
-    until: out.status == 200
+    until: out.status == 200 or out.status == 401
     retries: 5
     delay: 5
