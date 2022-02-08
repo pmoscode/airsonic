@@ -1,4 +1,18 @@
 ---
+- name: Get info for folder /usr/share/man/man1
+  stat:
+    path: /usr/share/man/man1
+  register: man_dir_stat
+
+- name: Ensure folder /usr/share/man/man1 exists
+  file:
+    path: /usr/share/man/man1
+    state: directory
+    owner: root
+    group: root
+    mode: 0755
+  when: not man_dir_stat.stat.exists
+
 - name: Get Java JDK package name for current Linux distribution
   set_fact:
     jdk_version: "{{ 'openjdk-11-jre' if (ansible_distribution_release | lower) == 'buster' else 'openjdk-17-jre' }}"
@@ -49,7 +63,7 @@
 
 - name: start Airsonic service
   systemd:
-    state: restarted
+    state: started
     name: airsonic
     daemon_reload: yes
     enabled: yes
