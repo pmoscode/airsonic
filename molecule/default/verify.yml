@@ -1,0 +1,32 @@
+---
+- name: Verify
+  hosts: all
+  gather_facts: false
+  tasks:
+  - name: Install testing dependencies
+    package:
+      name: "{{ item }}"
+      state: present
+    loop:
+      - procps
+      - net-tools
+
+  - name: Get all listen on ports
+    listen_ports_facts:
+
+  - name: Get current port status
+    set_fact:
+      port_listen: "{{ ansible_facts.tcp_listen | map(attribute='port') | unique | length }}"
+
+  - name: Start server
+    shell: /usr/bin/java -jar /opt/airsonic/airsonic.war
+    when: port_listen == "0"
+
+  - name: Check that webserver is running and returns status 200 or 401
+    uri:
+      url: http://localhost:8080
+    register: out
+    failed_when: out.status != 200 and out.status != 401
+    until: out.status == 200 or out.status == 401
+    retries: 5
+    delay: 5

@@ -1,0 +1,69 @@
+---
+- name: Get info for folder /usr/share/man/man1
+  stat:
+    path: /usr/share/man/man1
+  register: man_dir_stat
+
+- name: Ensure folder /usr/share/man/man1 exists
+  file:
+    path: /usr/share/man/man1
+    state: directory
+    owner: root
+    group: root
+    mode: 0755
+  when: not man_dir_stat.stat.exists
+
+- name: Get Java JDK package name for current Linux distribution
+  set_fact:
+    jdk_version: "{{ 'openjdk-11-jre-headless' if (ansible_distribution_release | lower) == 'buster' else 'openjdk-17-jre-headless' }}"
+
+- name: Show Java JDK version to install
+  debug:
+    var: jdk_version
+
+- name: Install openjdk
+  apt:
+    name:
+      - "{{ jdk_version }}"
+    update_cache: yes
+
+- name: "Ensure '{{ airsonic_user_group }}' group exists"
+  group:
+    name: "{{ airsonic_user_group }}"
+    state: present
+
+- name: "Ensure '{{ airsonic_user }}' user exists"
+  user:
+    name: "{{ airsonic_user }}"
+    shell: "/usr/sbin/nologin"
+    group: "{{ airsonic_user_group }}"
+    state: present
+
+- name: "Create airsonic folder {{ airsonic_install_folder }}"
+  file:
+    path: "{{ airsonic_install_folder }}"
+    state: directory
+    owner: "{{ airsonic_user }}"
+    group: "{{ airsonic_user_group }}"
+    mode: 0775
+
+- name: Get Airsonic war file
+  get_url:
+    url: "https://github.com/airsonic-advanced/airsonic-advanced/releases/download/{{ airsonic_version }}/airsonic.war"
+    dest: "{{ airsonic_install_folder }}/airsonic.war"
+    owner: "{{ airsonic_user }}"
+    group: "{{ airsonic_user_group }}"
+
+- name: Copy Airsonic service file
+  template:
+    src: airsonic.service.j2
+    dest: /etc/systemd/system/airsonic.service
+    owner: root
+    group: root
+
+- name: start Airsonic service
+  systemd:
+    state: started
+    name: airsonic
+    daemon_reload: yes
+    enabled: yes
