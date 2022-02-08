@@ -1,8 +1,8 @@
 ---
-- name: Install openjdk 17
+- name: Install openjdk
   apt:
     name:
-      - openjdk-17-jre
+      - "{{ 'openjdk-11-jre' if not (ansible_distribution_release | lower) == 'buster' else 'openjdk-17-jre' }}"
     update_cache: yes
 
 - name: "Ensure '{{ airsonic_user_group }}' group exists"
