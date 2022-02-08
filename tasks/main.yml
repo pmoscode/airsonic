@@ -45,6 +45,7 @@
     state: directory
     owner: "{{ airsonic_user }}"
     group: "{{ airsonic_user_group }}"
+    mode: 0775
 
 - name: Get Airsonic war file
   get_url:
@@ -57,7 +58,6 @@
   template:
     src: airsonic.service.j2
     dest: /etc/systemd/system/airsonic.service
-    mode: +x
     owner: root
     group: root
 

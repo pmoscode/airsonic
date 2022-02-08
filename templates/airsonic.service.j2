@@ -18,8 +18,8 @@ ExecStart=/usr/bin/java \
           -Dserver.servlet.contextPath=${CONTEXT_PATH} \
           -Dserver.port=${PORT} \
           -jar ${JAVA_JAR} $JAVA_ARGS
-User=root
-Group=root
+User={{ airsonic_user }}
+Group={{ airsonic_user_group }}
 
 # See https://www.freedesktop.org/software/systemd/man/systemd.exec.html
 # for details
