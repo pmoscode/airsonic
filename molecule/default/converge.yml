@@ -2,6 +2,12 @@
 - name: Converge
   hosts: all
 
+  pre_tasks:
+    - name: Install 'procps' before installation of openjdk
+      apt:
+        name:
+          - procps
+
   roles:
     - role: pmoscode.airsonic
 #    - role: airsonic
