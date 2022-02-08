@@ -1,8 +1,16 @@
 ---
+- name: Get Java JDK package name for current Linux distribution
+  set_fact:
+    jdk_version: "{{ 'openjdk-11-jre' if (ansible_distribution_release | lower) == 'buster' else 'openjdk-17-jre' }}"
+
+- name: Show Java JDK version to install
+  debug:
+    var: jdk_version
+
 - name: Install openjdk
   apt:
     name:
-      - "{{ 'openjdk-11-jre' if not (ansible_distribution_release | lower) == 'buster' else 'openjdk-17-jre' }}"
+      - "{{ jdk_version }}"
     update_cache: yes
 
 - name: "Ensure '{{ airsonic_user_group }}' group exists"
