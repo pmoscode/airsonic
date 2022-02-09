@@ -1,22 +1,31 @@
 Airsonic
 =========
 
-Installs a standalone Airsonic server.
+This is the fork of the original Airsonic server.
+Airsonic-Advanced has several key performance and feature enhancements. It adds and supersedes several features in Airsonic.
+
+See: https://github.com/airsonic-advanced/airsonic-advanced
 
 Role Variables
 --------------
 
-version: Airsonic version to install (only semver number)
+
+| Parameter               | Default                        | Description                                |
+|-------------------------|--------------------------------|--------------------------------------------|
+| airsonic_version        | 11.0.0-SNAPSHOT.20220124042650 | Airsonic version to install                |
+| airsonic_install_folder | /opt/airsonic                  | Installation location                      |
+| airsonic_context_path   | /                              | Ui path where Airsonic will resist         |
+| airsonic_port           | 8080                           | Server port Airsonic will listen on        |
+| airsonic_user           | airsonic                       | System user Airsonic server will use       |
+| airsonic_user_group     | airsonic                       | System user group Airsonic server will use |
 
 Dependencies
 ------------
 
-none
+There are no specific dependencies. But on Debian Buster openjdk 11 will be installed instead of openjdk 17.
 
 Example Playbook
 ----------------
-
-Including an example of how to use your role (for instance, with variables passed in as parameters) is always nice for users too:
 
         - name: "Install Airsonic"
           hosts: airsonic
@@ -24,7 +33,8 @@ Including an example of how to use your role (for instance, with variables passe
           roles:
             - role: airsonic
               vars:
-                version: 10.6.2
+                airsonic_version: 11.0.0-SNAPSHOT.20220124042650
+                airsonic_install_folder: /opt/airsonic
 
 License
 -------
